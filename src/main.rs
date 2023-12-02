@@ -1,5 +1,4 @@
 use coins_ledger::{common::APDUData, transports::LedgerAsync, APDUCommand, Ledger};
-use futures_executor::block_on;
 use hex_literal::hex;
 
 const P1_FIRST: u8 = 0x00;
@@ -15,7 +14,7 @@ const PATH: &[u8] = &hex!("058000002c8000003c800000000000000000000000");
 /// Legacy (non-1559) transaction sending 0 ETH to the zero address
 const TX: &[u8] = &hex!("df80808252089400000000000000000000000000000000000000008080018080");
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() {
     let transport = Ledger::init().await.expect("Ledger init failed");
 
@@ -41,7 +40,12 @@ async fn main() {
     for chunk in payload.chunks(chunk_size) {
         command.data = APDUData::new(chunk);
 
-        answer = Some(block_on(transport.exchange(&command)).expect("transport exchange failed"));
+        answer = Some(
+            transport
+                .exchange(&command)
+                .await
+                .expect("transport exchange failed"),
+        );
 
         let data = answer.as_ref().expect("just assigned").data();
         if data.is_none() {
