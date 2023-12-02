@@ -7,4 +7,5 @@ edition = "2021"
 coins-ledger = { git = "https://github.com/summa-tx/coins", rev = "1d578d4e00e24bdd5e4c89174c105107f3469931" }
 futures-executor = "0.3.29"
 hex = "0.4.3"
+hex-literal = "0.4.1"
 tokio = { version = "1.34.0", features = ["full"] }

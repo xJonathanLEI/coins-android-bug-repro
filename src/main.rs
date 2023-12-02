@@ -1,30 +1,29 @@
 use coins_ledger::{common::APDUData, transports::LedgerAsync, APDUCommand, Ledger};
 use futures_executor::block_on;
+use hex_literal::hex;
 
 const P1_FIRST: u8 = 0x00;
 const P1_MORE: u8 = 0x80;
 
 const P2_NO_CHAINCODE: u8 = 0x00;
 
-const SIGN_PERSONAL_MESSAGE: u8 = 0x08;
+const SIGN: u8 = 0x04;
 
 /// m/44'/60'/0'/0/0
-const PATH: &[u8] = &[
-    5, 128, 0, 0, 44, 128, 0, 0, 60, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-];
+const PATH: &[u8] = &hex!("058000002c8000003c800000000000000000000000");
+
+/// Legacy (non-1559) transaction sending 0 ETH to the zero address
+const TX: &[u8] = &hex!("df80808252089400000000000000000000000000000000000000008080018080");
 
 #[tokio::main]
 async fn main() {
     let transport = Ledger::init().await.expect("Ledger init failed");
 
-    let message = "hello world".as_bytes();
-
     let mut payload = PATH.to_vec();
-    payload.extend_from_slice(&(message.len() as u32).to_be_bytes());
-    payload.extend_from_slice(message);
+    payload.extend_from_slice(TX);
 
     let mut command = APDUCommand {
-        ins: SIGN_PERSONAL_MESSAGE,
+        ins: SIGN,
         p1: P1_FIRST,
         p2: P2_NO_CHAINCODE,
         data: APDUData::new(&[]),

@@ -38,7 +38,7 @@ Now, use this value to run the following command. Replace the path with the valu
 termux-usb -r -E -e "cargo run" /dev/bus/usb/002/003
 ```
 
-which should ask for a signature for `hello world` from your Ledger device. This is using the `main` branch for `coins-ledger`.
+which should ask for a signature for send a `0 ETH` transaction to the zero address from your Ledger device. This is using the `main` branch for `coins-ledger`.
 
 Now, change the Git `rev` used for the `coins-ledger` dependency to point to the PR head. Alternatively, use the `Cargo.pr.toml` file, which points to commit `1d578d4`
 
