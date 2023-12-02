@@ -52,4 +52,10 @@ And run the `cargo run` command again:
 termux-usb -r -E -e "cargo run" /dev/bus/usb/002/003
 ```
 
-This time, the application should fail.
+This time, the application should fail:
+
+```log
+thread 'main' panicked at src/main.rs:47:18:
+transport exchange failed: ResponseTooShort([])
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
